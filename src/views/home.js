@@ -1,9 +1,28 @@
 import React from "react";
 
+import UsuarioService from "../app/service/usuarioService";
+import localStorageService from "../app/service/localStorageService";
+
 class Home extends React.Component{
 
     state = {
         saldo: 0
+    }
+
+    constructor(){
+        super()
+        this.usuarioService = new UsuarioService();
+    }
+
+    componentDidMount(){
+        const usuarioLogado = localStorageService.obterItem('_usuario_logado')
+
+        this.usuarioService.obterSaldoPorUsuario(usuarioLogado.id)
+            .then( response =>{
+                this.setState({ saldo: response.data})
+            }).catch( erro => {
+                console.error(erro.response)
+            });
     }
 
     render(){
