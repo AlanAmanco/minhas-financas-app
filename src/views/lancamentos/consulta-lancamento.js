@@ -55,7 +55,7 @@ class ConsultaLancamentos extends React.Component {
     }
 
     editar = (id) => {
-        console.log('Editando',id)
+        this.props.history.push(`/cadastro-lancamentos/${id}`)
     }
 
     abrirConfirmacao = (lancamento) => {
@@ -70,16 +70,18 @@ class ConsultaLancamentos extends React.Component {
         this.service
             .delete(this.state.lancamentoDeletar.id)
             .then(response => {
-
                 const lancamentos = this.state.lancamentos
                 const index = lancamentos.indexOf(this.state.lancamentoDeletar)
                 lancamentos.splice(index, 1)
                 this.setState( {lancamentos: lancamentos, showConfirmDialog: false} )
-
                 messages.mensagemSucesso('Lançamento deletado com sucesso!.')
             }).catch(error => {
                 messages.mensagemErro('Ocorreu um erro ao tentar deletar o Lançamento')
             })
+    }
+
+    preparaFormularioCadastro = () => {
+        this.props.history.push('/cadastro-lancamentos')
     }
 
     render(){
@@ -130,7 +132,7 @@ class ConsultaLancamentos extends React.Component {
                                             className='form-control' lista={tipos}/>
                             </FormGroup>
                             <button onClick={this.buscar} type="button" className="btn btn-success">Buscar</button>
-                            <button type="button" className="btn btn-danger">Cadastrar</button>
+                            <button onClick={this.preparaFormularioCadastro} type="button" className="btn btn-danger">Cadastrar</button>
                         </div>
                     </div>
                 </div>
