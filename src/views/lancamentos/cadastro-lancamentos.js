@@ -19,7 +19,8 @@ class CadastroLancamento extends React.Component {
         ano: '',
         tipo: '',
         status: '',
-        usuario: null
+        usuario: null,
+        atualizando: false
     }
 
     constructor(){
@@ -41,10 +42,19 @@ class CadastroLancamento extends React.Component {
 
 
     submit = ()=>{
+
         const usuarioLogado = localStorageService.obterItem('_usuario_logado')
 
         const { descricao, valor, mes, ano, tipo} = this.state
         const lancamento = { descricao, valor, mes, ano, tipo, usuario: usuarioLogado.id}
+
+        try {
+            this.service.validar(lancamento)
+        } catch (erro) {
+            const mensagens = erro.mensagens;
+         mensagens.forEach(msg => messages.mensagemErro(msg))
+            return false;
+        }
 
         this.service
             .salvar(lancamento)
@@ -88,7 +98,7 @@ class CadastroLancamento extends React.Component {
         const meses = this.service.obterListaMeses()
 
         return(
-            <Card title="Cadastro de Lançamento">
+            <Card title={ this.state.atualizando ? 'Atualização de Lançamento' : 'Cadastro de Lançamento' }>
                 <div className="row">
                     <div className="col-md-12">
                         <FormGroup id="inputDescricao" label="Descrição: *" >
@@ -157,8 +167,14 @@ class CadastroLancamento extends React.Component {
                 <br/>
                 <div className="row">
                     <div className="col-md-6">
-                        <button onClick={this.submit} className="btn btn-success"> Salvar</button>
-                        <button onClick={this.atualiza} className="btn btn-primary"> atualizar</button>
+                        { this.state.atualizando ? 
+                        (
+                            <button onClick={this.atualiza} className="btn btn-primary"> atualizar</button>
+                        ) : (
+                            <button onClick={this.submit} className="btn btn-success"> Salvar</button>
+                        )
+
+                        }
                         <button onClick={e => this.props.history.push('/consulta-lancamentos')}className="btn btn-danger"> Cancelar</button>
                     </div>
                 </div>
