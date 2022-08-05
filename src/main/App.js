@@ -2,6 +2,7 @@ import React from 'react';
 
 import Rotas from './rotas';
 import Navbar from '../components/navbar'
+import ProvedorAutenticado from './provedorAutenticacao';
 
 import 'toastr/build/toastr.min.js'
 
@@ -18,12 +19,12 @@ class App extends React.Component {
  
   render(){
     return(
-      <>
+      <ProvedorAutenticado>
         <Navbar/>
         <div className='container'> 
           <Rotas />
         </div>
-      </>
+      </ProvedorAutenticado>
     )
   }
 }
